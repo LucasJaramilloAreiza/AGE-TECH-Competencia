@@ -318,10 +318,6 @@ If the project is uploaded to a public repository, the correct approach is:
 
 This is the recommended practice when redistribution rights are not explicitly granted.
 
-## Video tutorial (placeholder)
-
-[Insert YouTube tutorial link here: how to request/download SABE and MHAS data and where to place the files locally]
-
 ## Closing note
 
 This repository is intentionally designed as a reproducible, transparent, and legally cautious research package. It supports open science without violating data-access constraints. The actual microdata remain under official control and must be obtained separately by the researcher in accordance with the terms of the data providers.
