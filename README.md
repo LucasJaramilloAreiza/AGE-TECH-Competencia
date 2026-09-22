@@ -295,7 +295,7 @@ $env:PYTHONPATH="."
 python -m AgeTechRegional.cli --config AgeTechRegional\config.local.json
 ```
 
-La ejecución espera que el investigador haya colocado previamente los archivos autorizados en `staging/` y que los manifests existan en `results/`.
+La ejecución espera que el investigador haya colocado previamente los archivos autorizados en `staging/`. Los manifests no deben crearse manualmente: el pipeline los genera o actualiza automáticamente en `results/manifest_sabe.json` y `results/manifest_mhas.json`.
 
 ### 9. Recomendación para envío o sharing
 
@@ -504,7 +504,7 @@ $env:PYTHONPATH="."
 python -m AgeTechRegional.cli --config AgeTechRegional\config.local.json
 ```
 
-The pipeline expects the researcher to have already placed the authorized files in `staging/` and the manifests in `results/`.
+The pipeline expects the researcher to have already placed the authorized files in `staging/`. Manifests do not need to exist beforehand: the pipeline automatically creates or updates `results/manifest_sabe.json` and `results/manifest_mhas.json`.
 
 ### 8. Recommended publication policy
 

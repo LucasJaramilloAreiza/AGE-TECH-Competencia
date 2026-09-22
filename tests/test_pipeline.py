@@ -1,9 +1,15 @@
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from AgeTechRegional.catalog import EvidenceRule, discover_columns
-from AgeTechRegional.pipeline import _leakage_check, _make_partitions
+from AgeTechRegional.config import PipelineConfig, SourceConfig
+from AgeTechRegional.pipeline import (
+    _leakage_check,
+    _make_partitions,
+    _validate_inputs,
+)
 
 
 def test_discovery_requires_evidence_pattern():
@@ -39,3 +45,38 @@ def test_partitions_are_deterministic():
     first = _make_partitions(frame, 7, 0.5)["split"].tolist()
     second = _make_partitions(frame, 7, 0.5)["split"].tolist()
     assert first == second
+
+
+def test_validation_generates_missing_manifests(tmp_path: Path):
+    staging = tmp_path / "staging" / "sabe"
+    staging.mkdir(parents=True)
+    input_path = staging / "input.parquet"
+    pd.DataFrame({"age": [70]}).to_parquet(input_path, index=False)
+    manifest = tmp_path / "results" / "manifest_sabe.json"
+    config = PipelineConfig(
+        sources=(SourceConfig("sabe", "CO", 2015, staging, manifest, {}),),
+        output_dir=tmp_path / "outputs",
+        evidence_catalog=tmp_path / "evidence_catalog.json",
+    )
+    config.evidence_catalog.write_text('{"variables": []}', encoding="utf-8")
+
+    _validate_inputs(config)
+
+    assert manifest.exists()
+    assert '"input.parquet"' in manifest.read_text(encoding="utf-8")
+
+
+def test_validation_reports_empty_staging(tmp_path: Path):
+    staging = tmp_path / "staging" / "mhas"
+    staging.mkdir(parents=True)
+    config = PipelineConfig(
+        sources=(
+            SourceConfig("mhas", "MX", 2024, staging, tmp_path / "manifest.json", {}),
+        ),
+        output_dir=tmp_path / "outputs",
+        evidence_catalog=tmp_path / "evidence_catalog.json",
+    )
+    config.evidence_catalog.write_text('{"variables": []}', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="staging/mhas/"):
+        _validate_inputs(config)

@@ -262,16 +262,56 @@ def _make_partitions(frame: pd.DataFrame, seed: int, test_size: float) -> pd.Dat
 def _validate_inputs(config: PipelineConfig) -> None:
     if not config.evidence_catalog.exists():
         raise FileNotFoundError(f"Evidence catalog not found: {config.evidence_catalog}")
+    config.output_dir.mkdir(parents=True, exist_ok=True)
     for source in config.sources:
         if not source.staging_dir.is_dir():
-            raise FileNotFoundError(f"Staging directory not found: {source.staging_dir}")
-        if not source.manifest.exists():
-            raise FileNotFoundError(f"Manifest not found: {source.manifest}")
+            raise FileNotFoundError(
+                f"Staging directory for '{source.name}' not found: {source.staging_dir}. "
+                f"Create it and place the authorized input files in staging/{source.name}/."
+            )
+        files = sorted(source.staging_dir.glob("*.parquet"))
+        if not files:
+            raise ValueError(
+                f"Staging directory for '{source.name}' is empty or contains no Parquet files: "
+                f"{source.staging_dir}. Place the authorized Parquet input files in "
+                f"staging/{source.name}/ before running the pipeline."
+            )
+        _write_json(_build_source_manifest(source, files), source.manifest)
 
 
 def _manifest_summary(source: SourceConfig) -> dict[str, Any]:
     payload = json.loads(source.manifest.read_text(encoding="utf-8"))
-    return {"name": source.name, "manifest": str(source.manifest), "entries": len(payload)}
+    return {
+        "name": source.name,
+        "manifest": str(source.manifest),
+        "entries": len(payload.get("files", [])),
+        "source_sha256": payload["source_sha256"],
+    }
+
+
+def _build_source_manifest(source: SourceConfig, files: list[Path]) -> dict[str, Any]:
+    entries = []
+    for path in files:
+        entries.append(
+            {
+                "file": path.name,
+                "size_bytes": path.stat().st_size,
+                "sha256": _sha256(path),
+            }
+        )
+    digest = hashlib.sha256(
+        json.dumps(entries, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+    return {
+        "schema_version": 1,
+        "source": source.name,
+        "country": source.country,
+        "wave": source.wave,
+        "staging_dir": str(source.staging_dir),
+        "time_windows": source.time_windows,
+        "source_sha256": digest,
+        "files": entries,
+    }
 
 
 def _trace_id(*parts: str) -> str:
