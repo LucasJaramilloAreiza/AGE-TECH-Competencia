@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.env
+.env.*
+.coverage
+.coverage.*
+htmlcov/
+
+# IDE / editors
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local execution artifacts
+outputs/
+results/
+staging/
+
+# Raw datasets and large data files
+*.parquet
+*.csv
+*.dta
+*.xlsx
+*.xls
+*.zip
+*.gz
+*.tar
+*.tgz
+*.sas7bdat
+*.sav
+*.RData
+*.pkl
+
+# Local runtime files
+*.log

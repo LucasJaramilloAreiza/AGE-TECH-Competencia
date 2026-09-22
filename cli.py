@@ -3,8 +3,12 @@ from __future__ import annotations
 import argparse
 import json
 
-from .config import PipelineConfig
-from .pipeline import run
+try:
+    from .config import PipelineConfig
+    from .pipeline import run
+except ImportError:  # pragma: no cover - compatibility for direct module execution
+    from config import PipelineConfig
+    from pipeline import run
 
 
 def main() -> None:

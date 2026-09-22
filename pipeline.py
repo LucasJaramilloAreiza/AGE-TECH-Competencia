@@ -9,8 +9,12 @@ from typing import Any
 
 import pandas as pd
 
-from .catalog import discover_columns, load_rules, rules_as_records
-from .config import PipelineConfig, SourceConfig
+try:
+    from .catalog import discover_columns, load_rules, rules_as_records
+    from .config import PipelineConfig, SourceConfig
+except ImportError:  # pragma: no cover - compatibility for direct module execution
+    from catalog import discover_columns, load_rules, rules_as_records
+    from config import PipelineConfig, SourceConfig
 
 DIRECT_ID_PATTERNS = (
     r"(^|_)(name|nombre|address|direccion|phone|telefono|email|ssn|cedula|"
