@@ -22,6 +22,7 @@ DIRECT_ID_PATTERNS = (
 )
 LEAKAGE_PATTERNS = (r"outcome", r"target", r"label", r"future", r"post", r"after")
 MISSING_CODES = {-99, -98, -97, -96, 97, 98, 99}
+INPUT_SUFFIXES = {".parquet", ".dta", ".txt"}
 
 
 def run(config: PipelineConfig) -> dict[str, Any]:
@@ -88,13 +89,13 @@ def _build_source(
     rules: tuple,
     output_dir: Path,
 ) -> tuple[pd.DataFrame, list[dict[str, Any]]]:
-    files = sorted(source.staging_dir.glob("*.parquet"))
+    files = _source_files(source.staging_dir)
     if not files:
         raise FileNotFoundError(f"No parquet files found in {source.staging_dir}")
     frames: list[pd.DataFrame] = []
     records: list[dict[str, Any]] = []
     for path in files:
-        frame = pd.read_parquet(path)
+        frame = _read_source_file(path)
         matches = discover_columns(source.name, [str(c) for c in frame.columns], rules)
         records.extend(
             {
@@ -235,7 +236,7 @@ def _staging_leakage_check(config: PipelineConfig) -> dict[str, Any]:
     offenders: list[str] = []
     for source in config.sources:
         for path in sorted(source.staging_dir.glob("*.parquet")):
-            columns = [str(column) for column in pd.read_parquet(path, engine="pyarrow").columns]
+            columns = [str(column) for column in _read_source_file(path).columns]
             checked.extend(f"{source.name}:{column}" for column in columns)
             offenders.extend(
                 f"{source.name}:{column}"
@@ -269,12 +270,13 @@ def _validate_inputs(config: PipelineConfig) -> None:
                 f"Staging directory for '{source.name}' not found: {source.staging_dir}. "
                 f"Create it and place the authorized input files in staging/{source.name}/."
             )
-        files = sorted(source.staging_dir.glob("*.parquet"))
+        files = _source_files(source.staging_dir)
         if not files:
             raise ValueError(
-                f"Staging directory for '{source.name}' is empty or contains no Parquet files: "
-                f"{source.staging_dir}. Place the authorized Parquet input files in "
-                f"staging/{source.name}/ before running the pipeline."
+                f"Staging directory for '{source.name}' is empty or contains no supported data files: "
+                f"{source.staging_dir}. Place the authorized input files in "
+                f"staging/{source.name}/ before running the pipeline. Supported formats: "
+                f".parquet, .dta, and pipe-delimited .txt."
             )
         _write_json(_build_source_manifest(source, files), source.manifest)
 
@@ -295,6 +297,7 @@ def _build_source_manifest(source: SourceConfig, files: list[Path]) -> dict[str,
         entries.append(
             {
                 "file": path.name,
+                "relative_path": str(path.relative_to(source.staging_dir)),
                 "size_bytes": path.stat().st_size,
                 "sha256": _sha256(path),
             }
@@ -312,6 +315,25 @@ def _build_source_manifest(source: SourceConfig, files: list[Path]) -> dict[str,
         "source_sha256": digest,
         "files": entries,
     }
+
+
+def _source_files(staging_dir: Path) -> list[Path]:
+    return sorted(
+        path
+        for path in staging_dir.rglob("*")
+        if path.is_file() and path.suffix.lower() in INPUT_SUFFIXES
+    )
+
+
+def _read_source_file(path: Path) -> pd.DataFrame:
+    suffix = path.suffix.lower()
+    if suffix == ".parquet":
+        return pd.read_parquet(path)
+    if suffix == ".dta":
+        return pd.read_stata(path)
+    if suffix == ".txt":
+        return pd.read_csv(path, sep="|", low_memory=False)
+    raise ValueError(f"Unsupported source file format: {path}")
 
 
 def _trace_id(*parts: str) -> str:

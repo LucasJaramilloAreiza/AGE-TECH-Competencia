@@ -143,6 +143,7 @@ Importante:
 - `staging/sabe/` debe contener solo los archivos relevantes del microdato SABE 2015 autorizados.
 - `staging/mhas/` debe contener solo los archivos del core survey y secciones necesarias para el estudio.
 - `results/` debe contener los manifests de validación y trazabilidad del pipeline.
+- El pipeline lee recursivamente archivos `.txt` delimitados por `|`, `.dta` y `.parquet`.
 - NO se suben los microdatos al repositorio.
 - NO se usan todos los archivos del paquete de la encuesta; solo se usan las bases requeridas para el análisis y los datos relevantes para las variables canónicas del catálogo.
 
@@ -403,6 +404,7 @@ Important:
 - `staging/sabe/` should contain only the authorized SABE 2015 microdata files relevant to the study.
 - `staging/mhas/` should contain only the files needed for the core survey and required sections.
 - `results/` should contain the manifests needed for validation and pipeline traceability.
+- The pipeline recursively reads pipe-delimited `.txt`, `.dta`, and `.parquet` files.
 - RAW DATA MUST NOT be stored in the public repository.
 - NOT all files from the survey package are used; only the microdata relevant to the study and the canonical variables of the project should be ingested.
 

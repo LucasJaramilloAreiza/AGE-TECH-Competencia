@@ -1,6 +1,6 @@
 ﻿# Results
 
-Este directorio se genera localmente al ejecutar el pipeline. Los manifests se crean automáticamente a partir de los archivos Parquet presentes en `staging/sabe/` y `staging/mhas/`.
+Este directorio se genera localmente al ejecutar el pipeline. Los manifests se crean automáticamente a partir de los archivos `.txt` delimitados por `|`, `.dta` y `.parquet` presentes en `staging/sabe/` y `staging/mhas/`.
 
 No se debe subir al repositorio público si se quiere compartir solo el código y la documentación.
 

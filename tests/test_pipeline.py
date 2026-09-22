@@ -8,6 +8,7 @@ from AgeTechRegional.config import PipelineConfig, SourceConfig
 from AgeTechRegional.pipeline import (
     _leakage_check,
     _make_partitions,
+    _read_source_file,
     _validate_inputs,
 )
 
@@ -80,3 +81,12 @@ def test_validation_reports_empty_staging(tmp_path: Path):
 
     with pytest.raises(ValueError, match="staging/mhas/"):
         _validate_inputs(config)
+
+
+def test_pipe_delimited_text_is_supported(tmp_path: Path):
+    source_file = tmp_path / "Cap1Ident.txt"
+    source_file.write_text("age|fall_12m\n70|1\n", encoding="utf-8")
+
+    frame = _read_source_file(source_file)
+
+    assert frame.to_dict(orient="records") == [{"age": 70, "fall_12m": 1}]
