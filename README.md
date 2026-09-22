@@ -129,6 +129,7 @@ No se usan, ni se publican, ni se almacenan en este repositorio:
 #### MHAS / ENASEM 2024
 
 La base debe incluir solo los archivos y secciones requeridas para la harmonización del estudio. Como ejemplo, se pueden requerir archivos tipo:
+<img width="1891" height="700" alt="image" src="https://github.com/user-attachments/assets/4c4857a1-4ade-4485-8321-1fa001489194" />
 
 - `sect_trh_follow_up_2024`
 - `sect_trh_new_sample_2024`
@@ -289,6 +290,7 @@ The following are not included in the public repository and should not be redist
 #### MHAS / ENASEM 2024
 
 Only the relevant authorized files and sections should be imported. For example, files such as:
+<img width="1891" height="700" alt="image" src="https://github.com/user-attachments/assets/3414053f-5f2b-475a-9822-99d7f66d81fe" />
 
 - `sect_trh_follow_up_2024`
 - `sect_trh_new_sample_2024`
