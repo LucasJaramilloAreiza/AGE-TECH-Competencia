@@ -162,6 +162,25 @@ The project includes:
 
 This makes it possible to audit the full lifecycle of the dataset from input to final harmonized output.
 
+### 12.1 Source-aware crosswalk
+
+`evidence_catalog.json` contains both the original regex rules and an exact
+`source_mappings` crosswalk. Exact mappings are constrained by source and raw column
+name, and their provenance is emitted in `variable_catalog.csv` and the long
+harmonized table through `evidence_reference`, `mapping_type`, `description`,
+`time_window`, and `comparable`. The expanded MHAS 2024 crosswalk covers the documented
+age, sex, self-rated health, hypertension, diabetes, falls, sensory, memory,
+functional/mobility, assistive-device, ADL, IADL, and care indicators. SABE mappings
+are intentionally narrower and only use codes documented in the repository, including
+`P122EDAD` and `P121`.
+
+This is a conservative crosswalk, not a claim that similarly named survey items are
+equivalent. `falls_12m` and `falls_24m` remain separate canonical observations with
+their source-specific windows. Other health, sensory, cognition, function, and care
+items are non-comparable unless explicitly marked otherwise. The official SABE
+dictionary must still be reviewed before adding further mappings; no restricted or raw
+survey data is included in this repository.
+
 ## 13. Intended research applications
 
 This dataset is intended for:

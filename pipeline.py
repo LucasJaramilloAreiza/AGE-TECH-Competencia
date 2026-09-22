@@ -10,10 +10,10 @@ from typing import Any
 import pandas as pd
 
 try:
-    from .catalog import discover_columns, load_rules, rules_as_records
+    from .catalog import discover_columns, load_rules, load_source_mappings, rules_as_records
     from .config import PipelineConfig, SourceConfig
 except ImportError:  # pragma: no cover - compatibility for direct module execution
-    from catalog import discover_columns, load_rules, rules_as_records
+    from catalog import discover_columns, load_rules, load_source_mappings, rules_as_records
     from config import PipelineConfig, SourceConfig
 
 DIRECT_ID_PATTERNS = (
@@ -28,19 +28,20 @@ INPUT_SUFFIXES = {".parquet", ".dta", ".txt"}
 def run(config: PipelineConfig) -> dict[str, Any]:
     _validate_inputs(config)
     rules = load_rules(config.evidence_catalog)
+    mappings = load_source_mappings(config.evidence_catalog)
     config.output_dir.mkdir(parents=True, exist_ok=True)
     source_records: list[dict[str, Any]] = []
     source_frames: list[pd.DataFrame] = []
     quality: list[dict[str, Any]] = []
 
     for source in config.sources:
-        frame, records = _build_source(source, rules, config.output_dir)
+        frame, records = _build_source(source, rules, mappings, config.output_dir)
         source_frames.append(frame)
         source_records.extend(records)
         quality.extend(_quality_records(frame, source.name))
 
     all_frame = pd.concat(source_frames, ignore_index=True, sort=False)
-    harmonized = _build_harmonized(all_frame, rules)
+    harmonized = _build_harmonized(all_frame, rules, mappings)
     _write_table(all_frame, config.output_dir / "all_sources.parquet")
     _write_table(harmonized, config.output_dir / "harmonized" / "regional.parquet")
     _write_csv(source_records, config.output_dir / "catalog" / "variable_catalog.csv")
@@ -87,6 +88,7 @@ def run(config: PipelineConfig) -> dict[str, Any]:
 def _build_source(
     source: SourceConfig,
     rules: tuple,
+    mappings: tuple,
     output_dir: Path,
 ) -> tuple[pd.DataFrame, list[dict[str, Any]]]:
     files = _source_files(source.staging_dir)
@@ -96,7 +98,7 @@ def _build_source(
     records: list[dict[str, Any]] = []
     for path in files:
         frame = _read_source_file(path)
-        matches = discover_columns(source.name, [str(c) for c in frame.columns], rules)
+        matches = discover_columns(source.name, [str(c) for c in frame.columns], rules, mappings)
         records.extend(
             {
                 **match,
@@ -138,9 +140,8 @@ def _clean_values(frame: pd.DataFrame, raw_columns: list[str]) -> pd.DataFrame:
     return frame
 
 
-def _build_harmonized(frame: pd.DataFrame, rules: tuple) -> pd.DataFrame:
+def _build_harmonized(frame: pd.DataFrame, rules: tuple, mappings: tuple = ()) -> pd.DataFrame:
     records = []
-    rule_by_name = {rule.canonical: rule for rule in rules}
     for _, row in frame.iterrows():
         metadata = {
             key: row.get(key)
@@ -149,19 +150,25 @@ def _build_harmonized(frame: pd.DataFrame, rules: tuple) -> pd.DataFrame:
         for column, value in row.items():
             if column in metadata or column.startswith("source_") or pd.isna(value):
                 continue
-            matches = [rule for rule in rules if any(
-                re.search(pattern, column, flags=re.IGNORECASE) for pattern in rule.patterns
-            )]
-            for rule in matches:
+            matches = discover_columns(
+                str(row.get("source")),
+                [str(column)],
+                rules,
+                mappings,
+            )
+            for match in matches:
                 records.append(
                     {
                         **metadata,
-                        "variable_canonical": rule.canonical,
+                        "variable_canonical": match["variable_canonical"],
                         "value": value,
-                        "unit": rule.unit,
-                        "time_window": rule.time_window,
-                        "comparable": rule.comparable,
-                        "evidence_status": rule.evidence_status,
+                        "unit": match["unit"],
+                        "time_window": match["time_window"],
+                        "comparable": match["comparable"],
+                        "evidence_status": match["evidence_status"],
+                        "evidence_reference": match["evidence_reference"],
+                        "description": match["description"],
+                        "mapping_type": match["mapping_type"],
                         "raw_variable": column,
                         "quality_flag": "observed",
                         "traceability_id": _trace_id(
