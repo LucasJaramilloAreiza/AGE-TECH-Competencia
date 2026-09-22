@@ -100,8 +100,33 @@ Ejemplo real de uso:
 AGE-TECH-Competencia/
 staging/
 ├── sabe/
-│   ├── base_sabe_2015.dta
-│   └── diccionario_sabe_2015.xlsx
+│   ├── Base de datos y diccionario/
+│   │   ├── Base de datos - Capitulos/
+│   │   │   ├── Biom.txt
+│   │   │   ├── Cap1Ident.txt
+│   │   │   ├── Cap1Parte1.txt
+│   │   │   ├── Cap1Parte2.txt
+│   │   │   ├── Cap2.txt
+│   │   │   ├── Cap2Hijos.txt
+│   │   │   ├── Cap2PersCerc.txt
+│   │   │   ├── Cap2PersVivHog.txt
+│   │   │   ├── Cap3.txt
+│   │   │   ├── Cap4.txt
+│   │   │   ├── Cap5.txt
+│   │   │   ├── Cap6.txt
+│   │   │   ├── Cap7.txt
+│   │   │   ├── Cap8.txt
+│   │   │   ├── Cap8EnfNoTrans.txt
+│   │   │   ├── Cap8Med.txt
+│   │   │   ├── Cap9.txt
+│   │   │   ├── Cap10.txt
+│   │   │   ├── Cap11.txt
+│   │   │   └── Cap12.TXT
+│   │   ├── Base de datos Cuidadores/
+│   │   │   ├── BASE_CF_20072019publicar.xlsx
+│   │   │   └── DICCIONARIO_CF_20072019.xlsx
+│   │   └── Diccionario de datos SABE.xlsx
+│   └── ...
 └── mhas/
     ├── sect_trh_follow_up_2024.dta
     ├── sect_trh_new_sample_2024.dta
@@ -133,14 +158,39 @@ AGE-TECH-Competencia/staging/sabe/
 
 En esta carpeta se espera la base de microdatos SABE 2015 y, si aplica, sus archivos auxiliares autorizados. Para esta fase del proyecto, no todos los archivos del paquete de SABE deben usarse; solo los necesarios para las variables objetivo del catálogo.
 
-Ejemplos de archivos que podrían estar aquí, según la descarga oficial autorizada:
+Los archivos clave de la descarga oficial, tal como aparecen en la estructura real del paquete de SABE 2015, son estos:
 
-- `Base de datos - Capitulos/*.txt`
-- `Base de datos y diccionario/*.xlsx`
-- `microdatos_sabe_2015.dta`
-- `diccionario_sabe_2015.xlsx`
+```text
+AGE-TECH-Competencia/staging/sabe/
+├── Base de datos y diccionario/
+│   ├── Base de datos - Capitulos/
+│   │   ├── Biom.txt
+│   │   ├── Cap1Ident.txt
+│   │   ├── Cap1Parte1.txt
+│   │   ├── Cap1Parte2.txt
+│   │   ├── Cap2.txt
+│   │   ├── Cap2Hijos.txt
+│   │   ├── Cap2PersCerc.txt
+│   │   ├── Cap2PersVivHog.txt
+│   │   ├── Cap3.txt
+│   │   ├── Cap4.txt
+│   │   ├── Cap5.txt
+│   │   ├── Cap6.txt
+│   │   ├── Cap7.txt
+│   │   ├── Cap8.txt
+│   │   ├── Cap8EnfNoTrans.txt
+│   │   ├── Cap8Med.txt
+│   │   ├── Cap9.txt
+│   │   ├── Cap10.txt
+│   │   ├── Cap11.txt
+│   │   └── Cap12.TXT
+│   ├── Base de datos Cuidadores/
+│   │   ├── BASE_CF_20072019publicar.xlsx
+│   │   └── DICCIONARIO_CF_20072019.xlsx
+│   └── Diccionario de datos SABE.xlsx
+```
 
-El criterio es: solo los archivos de microdatos y diccionario que realmente se usarán en la preparación del pipeline.
+Este conjunto es el que normalmente viene en la descarga oficial de SABE 2015. No todos esos archivos son obligatorios para el análisis final, pero son los que debes tener claros y no perder de vista. La parte principal del estudio suele estar en `Base de datos - Capitulos/`.
 
 #### MHAS / ENASEM 2024: archivos que deben ir en `staging/mhas/`
 
