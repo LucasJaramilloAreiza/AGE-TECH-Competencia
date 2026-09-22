@@ -1,5 +1,11 @@
 # AgeTechRegional
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Reproducible%20pipeline-blue" alt="status" />
+  <img src="https://img.shields.io/badge/Data-Official%20survey%20access-only-green" alt="access policy" />
+  <img src="https://img.shields.io/badge/License-MIT-orange" alt="license" />
+</p>
+
 ## Aviso importante sobre datos y redistribución
 
 Este repositorio NO incluye microdatos crudos ni archivos de encuesta redistribuibles. El proyecto se publica como un pipeline de reproducibilidad, catálogo de evidencia y documentación metodológica, pero no contiene las bases originales de SABE 2015 ni MHAS/ENASEM 2024.
