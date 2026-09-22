@@ -23,8 +23,15 @@ Thumbs.db
 
 # Local execution artifacts
 outputs/
-results/
-staging/
+results/*
+!results/README.md
+!results/.gitkeep
+staging/*
+!staging/README.md
+!staging/sabe/
+!staging/sabe/.gitkeep
+!staging/mhas/
+!staging/mhas/.gitkeep
 
 # Raw datasets and large data files
 *.parquet
