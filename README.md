@@ -64,6 +64,8 @@ Este repositorio no redistribuye esos archivos y no exige que se suban a GitHub.
 Portal oficial de microdatos de salud y encuestas del Ministerio de Salud de Colombia:
 
 https://enlinea.minsalud.gov.co/Encuestas/Microdatos.aspx?E=SABE2015
+<img width="1916" height="984" alt="image" src="https://github.com/user-attachments/assets/a7093342-374f-47f8-aceb-3bfb4d218bf8" />
+
 
 #### MHAS / ENASEM 2024
 
@@ -225,6 +227,7 @@ This repository does not redistribute the raw data and does not require users to
 Official microdata and survey access page:
 
 https://enlinea.minsalud.gov.co/Encuestas/Microdatos.aspx?E=SABE2015
+<img width="1916" height="984" alt="image" src="https://github.com/user-attachments/assets/62c92da3-2280-44e1-989c-1948314b20ce" />
 
 #### MHAS / ENASEM 2024
 
