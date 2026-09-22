@@ -90,3 +90,14 @@ def test_pipe_delimited_text_is_supported(tmp_path: Path):
     frame = _read_source_file(source_file)
 
     assert frame.to_dict(orient="records") == [{"age": 70, "fall_12m": 1}]
+
+
+def test_cp1252_pipe_delimited_text_is_supported(tmp_path: Path):
+    source_file = tmp_path / "Cap1Ident.txt"
+    source_file.write_bytes("nombre|region\nMuñoz|Bogotá\n".encode("cp1252"))
+
+    frame = _read_source_file(source_file)
+
+    assert frame.to_dict(orient="records") == [
+        {"nombre": "Muñoz", "region": "Bogotá"}
+    ]

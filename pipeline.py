@@ -332,7 +332,22 @@ def _read_source_file(path: Path) -> pd.DataFrame:
     if suffix == ".dta":
         return pd.read_stata(path)
     if suffix == ".txt":
-        return pd.read_csv(path, sep="|", low_memory=False)
+        errors: list[str] = []
+        for encoding in ("utf-8", "utf-8-sig", "cp1252", "latin-1"):
+            try:
+                return pd.read_csv(
+                    path,
+                    sep="|",
+                    encoding=encoding,
+                    low_memory=False,
+                )
+            except UnicodeDecodeError as exc:
+                errors.append(f"{encoding}: {exc}")
+        raise UnicodeError(
+            f"Could not decode pipe-delimited source file {path}. "
+            f"Tried UTF-8, UTF-8-SIG, CP1252, and Latin-1. "
+            f"Details: {'; '.join(errors)}"
+        )
     raise ValueError(f"Unsupported source file format: {path}")
 
 
