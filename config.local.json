@@ -4,8 +4,8 @@
       "name": "sabe",
       "country": "CO",
       "wave": 2015,
-      "staging_dir": "../../lucasjaramilloareiza-literate-couscous/staging/sabe",
-      "manifest": "../../lucasjaramilloareiza-literate-couscous/results/manifest_sabe.json",
+      "staging_dir": "staging/sabe",
+      "manifest": "results/manifest_sabe.json",
       "time_windows": {
         "falls": "last_12_months"
       }
@@ -14,8 +14,8 @@
       "name": "mhas",
       "country": "MX",
       "wave": 2024,
-      "staging_dir": "../../lucasjaramilloareiza-literate-couscous/staging/mhas",
-      "manifest": "../../lucasjaramilloareiza-literate-couscous/results/manifest_mhas.json",
+      "staging_dir": "staging/mhas",
+      "manifest": "results/manifest_mhas.json",
       "time_windows": {
         "falls": "last_24_months"
       }

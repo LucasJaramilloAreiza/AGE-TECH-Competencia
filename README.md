@@ -77,10 +77,10 @@ Cada investigador debe seguir el procedimiento de acceso institucional o de soli
 
 ### 5. Dónde poner los datos localmente
 
-Una vez descargados, los archivos deben colocarse en una estructura local de trabajo, no dentro del repositorio público. La convención recomendada es la siguiente:
+La configuración del proyecto ya está apuntando a rutas dentro del mismo repositorio. Para que funcione tal cual, debes descargar los datos y colocarlos dentro de esta misma carpeta del proyecto, en estas ubicaciones exactas:
 
 ```text
-<carpeta-de-trabajo-local>/
+AGE-TECH-Competencia/
 ├── staging/
 │   ├── sabe/
 │   │   └── <microdatos SABE 2015 autorizados>
@@ -89,8 +89,28 @@ Una vez descargados, los archivos deben colocarse en una estructura local de tra
 ├── results/
 │   ├── manifest_sabe.json
 │   └── manifest_mhas.json
-└── AGE-TECH-Competencia/
-    └── <este repositorio>
+├── README.md
+├── ...
+└── AgeTechRegional/
+```
+
+Ejemplo real de uso:
+
+```text
+AGE-TECH-Competencia/
+staging/
+├── sabe/
+│   ├── base_sabe_2015.dta
+│   └── diccionario_sabe_2015.xlsx
+└── mhas/
+    ├── sect_trh_follow_up_2024.dta
+    ├── sect_trh_new_sample_2024.dta
+    ├── sect_a_c_d_e_pc_f_h_i_2024.dta
+    └── ...
+
+results/
+├── manifest_sabe.json
+└── manifest_mhas.json
 ```
 
 Importante:
@@ -101,7 +121,60 @@ Importante:
 - NO se suben los microdatos al repositorio.
 - NO se usan todos los archivos del paquete de la encuesta; solo se usan las bases requeridas para el análisis y los datos relevantes para las variables canónicas del catálogo.
 
-### 6. Qué archivos se usan y cuáles no
+### 6. Archivos específicos que deben ir en cada carpeta
+
+#### SABE 2015: archivos que deben ir en `staging/sabe/`
+
+Los archivos que normalmente corresponden a la base autorizada de SABE 2015 deben colocarse en esta ruta dentro del repositorio:
+
+```text
+AGE-TECH-Competencia/staging/sabe/
+```
+
+En esta carpeta se espera la base de microdatos SABE 2015 y, si aplica, sus archivos auxiliares autorizados. Para esta fase del proyecto, no todos los archivos del paquete de SABE deben usarse; solo los necesarios para las variables objetivo del catálogo.
+
+Ejemplos de archivos que podrían estar aquí, según la descarga oficial autorizada:
+
+- `Base de datos - Capitulos/*.txt`
+- `Base de datos y diccionario/*.xlsx`
+- `microdatos_sabe_2015.dta`
+- `diccionario_sabe_2015.xlsx`
+
+El criterio es: solo los archivos de microdatos y diccionario que realmente se usarán en la preparación del pipeline.
+
+#### MHAS / ENASEM 2024: archivos que deben ir en `staging/mhas/`
+
+Los archivos del estudio MHAS / ENASEM que correspondan a la encuesta core o secciones requeridas deben ir en esta ruta:
+
+```text
+AGE-TECH-Competencia/staging/mhas/
+```
+
+Archivos típicos que suelen aparecer en esta carpeta:
+
+- `sect_trh_follow_up_2024.dta`
+- `sect_trh_new_sample_2024.dta`
+- `sect_a_c_d_e_pc_f_h_i_2024.dta`
+- `...`
+
+Lo importante es que solo vayan los archivos de la base relevante para la armonización, no toda la documentación ni archivos auxiliares no usados.
+
+#### Manifests: archivos que deben ir en `results/`
+
+La carpeta esperada es:
+
+```text
+AGE-TECH-Competencia/results/
+```
+
+Con archivos como:
+
+- `manifest_sabe.json`
+- `manifest_mhas.json`
+
+Estos archivos deben describir la validación del dataset, la fuente, el conjunto de filas y la trazabilidad del pipeline.
+
+### 7. Qué archivos se usan y cuáles no
 
 #### SABE 2015
 
@@ -239,10 +312,10 @@ Each researcher must follow the approved access or application procedure require
 
 ### 5. Where to place the data locally
 
-After download, the files should be placed in a local workspace outside the public repository. Recommended layout:
+The project configuration already points to paths inside the repository itself. To work as intended, you should download the official data and place it inside the same project folder, in these exact locations:
 
 ```text
-<local-workspace>/
+AGE-TECH-Competencia/
 ├── staging/
 │   ├── sabe/
 │   │   └── <authorized SABE 2015 microdata files>
@@ -251,8 +324,28 @@ After download, the files should be placed in a local workspace outside the publ
 ├── results/
 │   ├── manifest_sabe.json
 │   └── manifest_mhas.json
-└── AGE-TECH-Competencia/
-    └── <this repository>
+├── README.md
+├── ...
+└── AgeTechRegional/
+```
+
+Example:
+
+```text
+AGE-TECH-Competencia/
+staging/
+├── sabe/
+│   ├── base_sabe_2015.dta
+│   └── diccionario_sabe_2015.xlsx
+└── mhas/
+    ├── sect_trh_follow_up_2024.dta
+    ├── sect_trh_new_sample_2024.dta
+    ├── sect_a_c_d_e_pc_f_h_i_2024.dta
+    └── ...
+
+results/
+├── manifest_sabe.json
+└── manifest_mhas.json
 ```
 
 Important:
@@ -263,7 +356,58 @@ Important:
 - RAW DATA MUST NOT be stored in the public repository.
 - NOT all files from the survey package are used; only the microdata relevant to the study and the canonical variables of the project should be ingested.
 
-### 6. Which files are used and which are not
+### 6. Specific files to place in each folder
+
+#### SABE 2015: files to place in `staging/sabe/`
+
+Place the official, authorized SABE 2015 microdata inside:
+
+```text
+AGE-TECH-Competencia/staging/sabe/
+```
+
+This folder should contain the subset of SABE files actually needed for analysis. The project does not require all files from the full download package; only those necessary for the target variables and harmonization workflow should be kept.
+
+Typical examples include:
+
+- `base_sabe_2015.dta`
+- `diccionario_sabe_2015.xlsx`
+- `Base de datos - Capitulos/*.txt`
+- other authorized microdata files used by the analysis
+
+#### MHAS / ENASEM 2024: files to place in `staging/mhas/`
+
+Place the authorized MHAS / ENASEM survey files in:
+
+```text
+AGE-TECH-Competencia/staging/mhas/
+```
+
+Examples of relevant files often included here:
+
+- `sect_trh_follow_up_2024.dta`
+- `sect_trh_new_sample_2024.dta`
+- `sect_a_c_d_e_pc_f_h_i_2024.dta`
+- other required core sections only
+
+Do not include unrelated or non-essential documentation files in the repo.
+
+#### Manifests: files to place in `results/`
+
+Place the required manifests in:
+
+```text
+AGE-TECH-Competencia/results/
+```
+
+Examples:
+
+- `manifest_sabe.json`
+- `manifest_mhas.json`
+
+These files describe the source mapping, validation status, and execution traceability for the pipeline.
+
+### 7. Which files are used and which are not
 
 #### SABE 2015
 
