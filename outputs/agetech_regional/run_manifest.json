@@ -1,0 +1,16 @@
+{
+  "config_sha256": "eb768512e2c6b258c1074e64ca6ac965e34037fa5f5b0e9fe018d54928d124c6",
+  "inputs": [
+    {
+      "name": "sabe",
+      "manifest": "C:\\Users\\LUCASJARAMILLOAREIZA\\projects\\LucasJaramilloAreiza\\copilot-worktrees\\IEEE-pag-proyect\\lucasjaramilloareiza-literate-couscous\\results\\manifest_sabe.json",
+      "entries": 20
+    },
+    {
+      "name": "mhas",
+      "manifest": "C:\\Users\\LUCASJARAMILLOAREIZA\\projects\\LucasJaramilloAreiza\\copilot-worktrees\\IEEE-pag-proyect\\lucasjaramilloareiza-literate-couscous\\results\\manifest_mhas.json",
+      "entries": 3
+    }
+  ],
+  "created_at_utc": "2026-09-22T04:38:39.366087+00:00"
+}

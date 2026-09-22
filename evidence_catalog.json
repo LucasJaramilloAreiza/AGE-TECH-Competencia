@@ -1,0 +1,134 @@
+{
+  "variables": [
+    {
+      "canonical": "age_years",
+      "domain": "demography",
+      "patterns": ["(^|_)(age|edad)(_|$)"],
+      "evidence_status": "direct",
+      "unit": "years",
+      "comparable": true,
+      "time_window": "interview",
+      "description": "Age at interview when explicitly present in the source dictionary."
+    },
+    {
+      "canonical": "sex",
+      "domain": "demography",
+      "patterns": ["(^|_)(sex|sexo|gender)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": true,
+      "time_window": "interview",
+      "description": "Source-coded sex/gender field; labels and coding remain source-specific."
+    },
+    {
+      "canonical": "adl_function",
+      "domain": "functionality_adl",
+      "patterns": ["(^|_)(adl|iadl|bano|banarse|vestir|comer|caminar|subir|bajar)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview",
+      "description": "Activity/function item retained without collapsing instrument differences."
+    },
+    {
+      "canonical": "mobility_limitation",
+      "domain": "mobility",
+      "patterns": ["(^|_)(mobil|movil|walking|caminar|stairs|escalera)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview",
+      "description": "Mobility item; crosswalk requires instrument-level review."
+    },
+    {
+      "canonical": "assistive_device",
+      "domain": "assistive_technology",
+      "patterns": ["(^|_)(aid|device|ayuda|baston|silla|walker|lentes|audif)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview",
+      "description": "Use of an assistive device retained by source and item."
+    },
+    {
+      "canonical": "falls_12m",
+      "domain": "falls",
+      "patterns": ["(^|_)(fall|caid).*(12|1|ultimo|year|ano)(_|$)"],
+      "evidence_status": "direct",
+      "unit": "binary_or_count",
+      "comparable": false,
+      "time_window": "last_12_months",
+      "description": "Fall measure with a one-year reference window, notably SABE wording."
+    },
+    {
+      "canonical": "falls_24m",
+      "domain": "falls",
+      "patterns": ["(^|_)(fall|caid).*(24|2|two|dos)(_|$)"],
+      "evidence_status": "direct",
+      "unit": "binary_or_count",
+      "comparable": false,
+      "time_window": "last_24_months",
+      "description": "Fall measure with a two-year reference window, notably MHAS wording."
+    },
+    {
+      "canonical": "vision",
+      "domain": "sensory",
+      "patterns": ["(^|_)(vision|vista|visual)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview",
+      "description": "Vision status or limitation retained with original response scale."
+    },
+    {
+      "canonical": "hearing",
+      "domain": "sensory",
+      "patterns": ["(^|_)(hearing|audicion|oido|sordo)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview",
+      "description": "Hearing status or limitation retained with original response scale."
+    },
+    {
+      "canonical": "cognition",
+      "domain": "cognition",
+      "patterns": ["(^|_)(cogn|memory|memoria|orient|recall)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview",
+      "description": "Cognitive item/score only when identified in the local documentation."
+    },
+    {
+      "canonical": "comorbidity",
+      "domain": "comorbidities",
+      "patterns": ["(^|_)(diabet|diabetes|hipert|heart|corazon|arthritis|artr|cancer|enferm)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview_or_history",
+      "description": "Self-reported or measured condition retained without disease-score synthesis."
+    },
+    {
+      "canonical": "anthropometry",
+      "domain": "anthropometry_biometrics",
+      "patterns": ["(^|_)(weight|peso|height|talla|altura|bmi|imc|waist|cintura)(_|$)"],
+      "evidence_status": "direct",
+      "unit": null,
+      "comparable": false,
+      "time_window": "measurement",
+      "description": "Anthropometric/biometric field; units must be confirmed by documentation."
+    },
+    {
+      "canonical": "context",
+      "domain": "context",
+      "patterns": ["(^|_)(urban|rural|region|estado|depart|educ|income|ingreso|hogar)(_|$)"],
+      "evidence_status": "context_only",
+      "unit": null,
+      "comparable": false,
+      "time_window": "interview",
+      "description": "Contextual covariate retained for stratification and coverage reporting."
+    }
+  ]
+}

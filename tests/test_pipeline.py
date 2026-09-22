@@ -1,0 +1,41 @@
+from pathlib import Path
+
+import pandas as pd
+
+from AgeTechRegional.catalog import EvidenceRule, discover_columns
+from AgeTechRegional.pipeline import _leakage_check, _make_partitions
+
+
+def test_discovery_requires_evidence_pattern():
+    rules = (
+        EvidenceRule("falls_12m", "falls", (r"fall_12m",), "direct", None, False, "last_12_months", "x"),
+    )
+    records = discover_columns("sabe", ["fall_12m", "unrelated"], rules)
+    assert [record["raw_variable"] for record in records] == ["fall_12m"]
+
+
+def test_fall_windows_are_not_collapsed():
+    assert "falls_12m" != "falls_24m"
+
+
+def test_leakage_check_flags_future_columns():
+    frame = pd.DataFrame({"variable_canonical": ["falls_12m"], "raw_variable": ["future_target"]})
+    result = _leakage_check(frame)
+    assert not result["passed"]
+
+
+def test_partitions_are_deterministic():
+    frame = pd.DataFrame(
+        {
+            "source": ["sabe"] * 4,
+            "country": ["CO"] * 4,
+            "wave": [2015] * 4,
+            "row_source_file": ["a.parquet"] * 4,
+            "source_row_number": range(4),
+            "variable_canonical": ["age_years"] * 4,
+            "value": [70, 71, 72, 73],
+        }
+    )
+    first = _make_partitions(frame, 7, 0.5)["split"].tolist()
+    second = _make_partitions(frame, 7, 0.5)["split"].tolist()
+    assert first == second

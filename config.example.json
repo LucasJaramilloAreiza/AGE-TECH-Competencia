@@ -1,0 +1,28 @@
+{
+  "sources": [
+    {
+      "name": "sabe",
+      "country": "CO",
+      "wave": 2015,
+      "staging_dir": "../staging/sabe",
+      "manifest": "../results/manifest_sabe.json",
+      "time_windows": {
+        "falls": "last_12_months"
+      }
+    },
+    {
+      "name": "mhas",
+      "country": "MX",
+      "wave": 2024,
+      "staging_dir": "../staging/mhas",
+      "manifest": "../results/manifest_mhas.json",
+      "time_windows": {
+        "falls": "last_24_months"
+      }
+    }
+  ],
+  "output_dir": "../outputs/agetech_regional",
+  "evidence_catalog": "evidence_catalog.json",
+  "seed": 20260921,
+  "test_size": 0.2
+}

@@ -1,0 +1,4 @@
+source,raw_variable,variable_canonical,domain,evidence_status,unit,comparable,time_window,description,match_count,raw_file,traceability_id
+sabe,SILLA,assistive_device,assistive_technology,direct,,False,interview,Use of an assistive device retained by source and item.,1,Cap12.parquet,dff6620c2c68cde7fef6
+mhas,age_24,age_years,demography,direct,years,True,interview,Age at interview when explicitly present in the source dictionary.,1,sect_a_c_d_e_pc_f_h_i_2024.parquet,66d9829052b12a99d6e3
+mhas,sex_24,sex,demography,direct,,True,interview,Source-coded sex/gender field; labels and coding remain source-specific.,1,sect_a_c_d_e_pc_f_h_i_2024.parquet,a0968807af9cb0fe1b1b

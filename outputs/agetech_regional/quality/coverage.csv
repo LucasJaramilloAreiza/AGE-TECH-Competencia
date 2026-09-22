@@ -1,0 +1,4 @@
+source,raw_variable,rows,non_missing,coverage_pct,distinct_non_missing,invalid_missing_codes
+sabe,SILLA,23694,23694,100.0,2,0
+mhas,age_24,21090,21066,99.8862,81,0
+mhas,sex_24,21090,21090,100.0,2,0
