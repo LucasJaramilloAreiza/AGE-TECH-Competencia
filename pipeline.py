@@ -368,7 +368,25 @@ def _sha256(path: Path) -> str:
 
 def _write_table(frame: pd.DataFrame, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_parquet(path, index=False)
+    _normalize_for_parquet(frame).to_parquet(path, index=False)
+
+
+def _normalize_for_parquet(frame: pd.DataFrame) -> pd.DataFrame:
+    """Keep source values while making mixed Stata columns Arrow-compatible."""
+    result = frame.copy()
+    for column in result.columns:
+        series = result[column]
+        if isinstance(series.dtype, pd.CategoricalDtype):
+            result[column] = series.astype("string")
+            continue
+        if series.dtype != object:
+            continue
+        non_missing = series.dropna()
+        if not non_missing.empty and non_missing.map(type).nunique() > 1:
+            result[column] = series.map(
+                lambda value: pd.NA if pd.isna(value) else str(value)
+            ).astype("string")
+    return result
 
 
 def _write_csv(records: list[dict[str, Any]], path: Path) -> None:

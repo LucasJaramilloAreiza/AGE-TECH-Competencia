@@ -10,6 +10,7 @@ from AgeTechRegional.pipeline import (
     _leakage_check,
     _make_partitions,
     _read_source_file,
+    _write_table,
     _validate_inputs,
 )
 
@@ -78,6 +79,22 @@ def test_harmonized_output_keeps_mapping_metadata():
     assert result.loc[0, "variable_canonical"] == "falls_24m"
     assert result.loc[0, "evidence_reference"] == "MHAS c37_24"
     assert result.loc[0, "mapping_type"] == "exact_source_mapping"
+
+
+def test_write_table_normalizes_mixed_stata_category(tmp_path: Path):
+    frame = pd.DataFrame(
+        {
+            "c38_24": pd.Series([1, "88.RF", None], dtype="category"),
+            "age_24": [70, 71, 72],
+        }
+    )
+
+    _write_table(frame, tmp_path / "mixed.parquet")
+    result = pd.read_parquet(tmp_path / "mixed.parquet")
+
+    assert result["c38_24"].iloc[:2].tolist() == ["1", "88.RF"]
+    assert pd.isna(result["c38_24"].iloc[2])
+    assert result["age_24"].tolist() == [70, 71, 72]
 
 
 def test_fall_windows_are_not_collapsed():
