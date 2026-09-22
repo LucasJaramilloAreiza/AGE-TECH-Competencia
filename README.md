@@ -293,7 +293,7 @@ La carpeta `outputs/` se genera localmente tras ejecutar el pipeline. No se incl
 cd AGE-TECH-Competencia
 pip install -r requirements.txt
 $env:PYTHONPATH="."
-python -m AgeTechRegional.cli --config AgeTechRegional\config.local.json
+python -m AgeTechRegional.cli --config config.local.json
 ```
 
 La ejecución espera que el investigador haya colocado previamente los archivos autorizados en `staging/`. Los manifests no deben crearse manualmente: el pipeline los genera o actualiza automáticamente en `results/manifest_sabe.json` y `results/manifest_mhas.json`.
@@ -503,7 +503,7 @@ may be required, but the full auxiliary package or unrelated documentation shoul
 cd AGE-TECH-Competencia
 pip install -r requirements.txt
 $env:PYTHONPATH="."
-python -m AgeTechRegional.cli --config AgeTechRegional\config.local.json
+python -m AgeTechRegional.cli --config config.local.json
 ```
 
 The pipeline expects the researcher to have already placed the authorized files in `staging/`. Manifests do not need to exist beforehand: the pipeline automatically creates or updates `results/manifest_sabe.json` and `results/manifest_mhas.json`.
