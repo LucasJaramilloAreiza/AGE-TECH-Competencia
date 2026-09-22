@@ -6,6 +6,98 @@
   <img src="https://img.shields.io/badge/License-MIT-orange" alt="license" />
 </p>
 
+## English documentation
+
+### Project purpose and data policy
+
+AgeTechRegional is a local, reproducible, conservative pipeline for healthy ageing,
+mobility, falls, functional independence, assistive technology needs, and older-adult
+well-being. It uses authorized local extracts from SABE Colombia 2015 and MHAS / ENASEM
+2024. Raw or restricted survey files are intentionally excluded from Git and are never
+redistributed by this repository. Researchers must download the official files through
+the providers' approved access procedures and place only the authorized inputs in local
+`staging/sabe/` and `staging/mhas/` directories.
+
+The pipeline preserves source semantics instead of forcing equivalence. The evidence
+catalog combines the historical regex discovery rules with exact source-aware mappings.
+Exact mappings match both the source and raw column name, and emit the provenance fields
+`evidence_reference`, `description`, `mapping_type`, `raw_variable`, and
+`traceability_id`, together with source-specific `time_window` and `comparable` flags.
+The expanded MHAS crosswalk covers age, sex, self-rated health, hypertension, diabetes,
+falls, vision, hearing, memory, mobility/function, assistive devices, ADL, IADL, and
+care indicators. SABE mappings are intentionally conservative and limited to codes
+supported by the repository documentation.
+
+### Observed execution results
+
+The validated run produced:
+
+| Measure | Observed result |
+| --- | ---: |
+| Source-preserving rows | 68,478 |
+| Harmonized observations | 703,803 |
+| Discovered variables | 40 |
+| Quality records | 40 |
+| Leakage check | passed |
+
+The harmonized count is expected to exceed the source-row count: the source-preserving
+tables retain one row per input record, while the harmonized table is long format. Each
+non-missing evidence-backed variable in each source record becomes a separate
+observation, retaining its source, file, row number, raw variable, canonical variable,
+and provenance metadata.
+
+The run policy explicitly records that staging was not modified, direct identifiers were
+not modeled, and no cross-source linkage was performed. `falls_12m` and `falls_24m`
+remain separate canonical variables; their 12-month and 24-month windows are not
+collapsed or treated as interchangeable.
+
+### Reproduction
+
+Install the documented dependencies and place the authorized files in local staging:
+
+```powershell
+cd AGE-TECH-Competencia
+pip install -r requirements.txt
+$env:PYTHONPATH="."
+python -m AgeTechRegional.cli --config config.local.json
+```
+
+The command reads `.parquet`, `.dta`, and recursively discovered pipe-delimited `.txt`
+files. It writes generated artifacts under `outputs/agetech_regional/`:
+
+```text
+outputs/agetech_regional/
+├── source/sabe_2015/dataset.parquet
+├── source/mhas_2024/dataset.parquet
+├── all_sources.parquet
+├── harmonized/regional.parquet
+├── catalog/variable_catalog.csv
+├── catalog/evidence_rules.csv
+├── quality/coverage.csv
+├── quality/exclusions.csv
+├── quality/leakage_check.json
+├── quality/report.json
+├── partitions.parquet
+└── run_manifest.json
+```
+
+Manifests record input file names, sizes, hashes, source metadata, and configured time
+windows. The output catalog and long harmonized table provide row-level traceability
+without requiring raw data to be committed. Reproducibility therefore requires the
+same authorized source extracts, catalog version, configuration, and dependency
+environment; results should not be interpreted as a license to redistribute the
+underlying surveys.
+
+### Limitations
+
+Age and sex are conceptually comparable but retain source-specific coding. Health,
+falls, sensory, cognition, function, care, and assistive-device items remain
+non-comparable unless explicitly documented otherwise. SABE mappings are deliberately
+narrow because the official dictionary may not be present in every worktree; additional
+SABE fields must not be added from naming similarity alone. This package does not
+perform clinical validation, imputation, OMOP conversion, causal inference, or
+international linkage.
+
 ## Aviso importante sobre datos y redistribución
 
 Este repositorio NO incluye microdatos crudos ni archivos de encuesta redistribuibles. El proyecto se publica como un pipeline de reproducibilidad, catálogo de evidencia y documentación metodológica, pero no contiene las bases originales de SABE 2015 ni MHAS/ENASEM 2024.
@@ -552,6 +644,52 @@ conceptual, las respuestas, códigos y demás dominios permanecen source-specifi
 una revisión del diccionario oficial y de la redacción de cada instrumento. No se
 fabrican equivalencias para columnas SABE cuyo significado no está documentado en este
 repositorio.
+
+La ejecución validada observó:
+
+| Medida | Resultado observado |
+| --- | ---: |
+| Filas source-preserving | 68,478 |
+| Observaciones armonizadas | 703,803 |
+| Variables descubiertas | 40 |
+| Registros de calidad | 40 |
+| Leakage check | aprobado |
+
+El número de observaciones armonizadas es mayor que el de filas source-preserving
+porque la salida armonizada está en formato largo: cada variable respaldada por
+evidencia y no faltante de cada fila de origen se convierte en una observación
+separada. Se conservan la fuente, archivo, número de fila, variable cruda, variable
+canónica y los campos de provenance `evidence_reference`, `description`,
+`mapping_type`, `raw_variable` y `traceability_id`.
+
+La política de ejecución confirma que no se modificó `staging`, no se modelaron
+identificadores directos y no se hizo linkage entre fuentes. `falls_12m` y
+`falls_24m` permanecen separadas con sus ventanas de 12 y 24 meses. Los archivos
+crudos o restringidos se excluyen de Git: deben descargarse oficialmente y colocarse
+localmente en `staging/sabe/` y `staging/mhas/`.
+
+Para reproducir:
+
+```powershell
+cd AGE-TECH-Competencia
+pip install -r requirements.txt
+$env:PYTHONPATH="."
+python -m AgeTechRegional.cli --config config.local.json
+```
+
+La salida se genera en `outputs/agetech_regional/`, incluyendo las tablas
+source-preserving por fuente, `all_sources.parquet`,
+`harmonized/regional.parquet`, el catálogo de variables, reglas de evidencia,
+reportes de calidad, el leakage check, particiones y `run_manifest.json`.
+La reproducibilidad requiere los mismos extractos autorizados, configuración,
+catálogo y entorno de dependencias.
+
+Las limitaciones siguen siendo explícitas: edad y sexo son comparables a nivel
+conceptual, pero conservan sus códigos de origen; salud, caídas, visión, audición,
+cognición, funcionalidad, cuidado y ayudas técnicas no se fuerzan como equivalentes.
+Los mapeos SABE son intencionalmente conservadores porque el diccionario oficial
+puede no estar disponible en cada worktree. No se hace validación clínica, imputación,
+conversión OMOP ni linkage internacional.
 
 El pipeline ya fue ejecutado y generó una salida válida en la carpeta:
 
