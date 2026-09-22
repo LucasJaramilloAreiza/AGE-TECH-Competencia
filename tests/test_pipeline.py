@@ -3,9 +3,10 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from AgeTechRegional.catalog import EvidenceRule, discover_columns
+from AgeTechRegional.catalog import EvidenceRule, SourceMapping, discover_columns
 from AgeTechRegional.config import PipelineConfig, SourceConfig
 from AgeTechRegional.pipeline import (
+    _build_harmonized,
     _leakage_check,
     _make_partitions,
     _read_source_file,
@@ -19,6 +20,64 @@ def test_discovery_requires_evidence_pattern():
     )
     records = discover_columns("sabe", ["fall_12m", "unrelated"], rules)
     assert [record["raw_variable"] for record in records] == ["fall_12m"]
+
+
+def test_exact_source_mapping_has_provenance_and_wins_over_regex():
+    rules = (
+        EvidenceRule("comorbidity", "comorbidities", (r"c4_24",), "direct", None, False, "history", "broad"),
+    )
+    mappings = (
+        SourceMapping(
+            "mhas", "c4_24", "hypertension", "comorbidities", "official_label",
+            None, False, "interview_or_history", "hypertension", "MHAS label c4_24",
+        ),
+    )
+
+    records = discover_columns("mhas", ["c4_24"], rules, mappings)
+
+    assert len(records) == 1
+    assert records[0]["variable_canonical"] == "hypertension"
+    assert records[0]["mapping_type"] == "exact_source_mapping"
+    assert records[0]["evidence_reference"] == "MHAS label c4_24"
+
+
+def test_source_mapping_preserves_falls_windows():
+    mappings = (
+        SourceMapping(
+            "mhas", "c37_24", "falls_24m", "falls", "official_label",
+            "binary_or_count", False, "last_24_months", "two-year falls", "MHAS c37_24",
+        ),
+        SourceMapping(
+            "sabe", "CAIDAS_ULTIMO_ANO", "falls_12m", "falls", "documented_code",
+            "binary_or_count", False, "last_12_months", "one-year falls", "SABE documented code",
+        ),
+    )
+
+    mhas = discover_columns("mhas", ["c37_24"], (), mappings)
+    sabe = discover_columns("sabe", ["CAIDAS_ULTIMO_ANO"], (), mappings)
+
+    assert mhas[0]["variable_canonical"] == "falls_24m"
+    assert mhas[0]["time_window"] == "last_24_months"
+    assert sabe[0]["variable_canonical"] == "falls_12m"
+    assert sabe[0]["time_window"] == "last_12_months"
+
+
+def test_harmonized_output_keeps_mapping_metadata():
+    frame = pd.DataFrame(
+        {"source": ["mhas"], "country": ["MX"], "wave": [2024],
+         "row_source_file": ["synthetic.dta"], "source_row_number": [0],
+         "c37_24": [1]}
+    )
+    mapping = SourceMapping(
+        "mhas", "c37_24", "falls_24m", "falls", "official_label",
+        "binary_or_count", False, "last_24_months", "two-year falls", "MHAS c37_24",
+    )
+
+    result = _build_harmonized(frame, (), (mapping,))
+
+    assert result.loc[0, "variable_canonical"] == "falls_24m"
+    assert result.loc[0, "evidence_reference"] == "MHAS c37_24"
+    assert result.loc[0, "mapping_type"] == "exact_source_mapping"
 
 
 def test_fall_windows_are_not_collapsed():

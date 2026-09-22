@@ -535,6 +535,24 @@ clínica final ni un modelo predictivo entrenado. Además:
 
 ## Resultado actual
 
+### Catálogo ampliado y crosswalk por fuente
+
+El catálogo conserva las reglas regex históricas como descubrimiento de respaldo y añade
+`source_mappings` exactos en `evidence_catalog.json`. Estos mapeos requieren que coincidan
+la fuente y el nombre crudo, y agregan `evidence_reference`, `mapping_type`,
+`description`, `time_window` y `comparable` a cada observación de salida. MHAS 2024
+incluye edad, sexo, salud autopercibida, hipertensión, diabetes, caídas, visión,
+audición, memoria, dificultades de movilidad, ayudas técnicas, ADL, IADL e indicadores
+de cuidado (más de 20 columnas documentadas). SABE se limita a los códigos actualmente
+respaldados por la documentación local, incluyendo `P122EDAD` y `P121`.
+
+Las caídas no se colapsan: `falls_12m` conserva una ventana de 12 meses y
+`falls_24m` una de 24 meses. Aunque edad y sexo están marcados como comparables a nivel
+conceptual, las respuestas, códigos y demás dominios permanecen source-specific hasta
+una revisión del diccionario oficial y de la redacción de cada instrumento. No se
+fabrican equivalencias para columnas SABE cuyo significado no está documentado en este
+repositorio.
+
 El pipeline ya fue ejecutado y generó una salida válida en la carpeta:
 
 ```text
